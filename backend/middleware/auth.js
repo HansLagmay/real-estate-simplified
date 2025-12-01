@@ -6,7 +6,15 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-const JWT_SECRET = process.env.JWT_SECRET || 'real-estate-simplified-secret-key-change-in-production';
+// Validate JWT_SECRET is set in production
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET && process.env.NODE_ENV === 'production') {
+    console.error('FATAL: JWT_SECRET environment variable is not set in production');
+    process.exit(1);
+}
+
+// Use fallback only in development
+const jwtSecret = JWT_SECRET || 'real-estate-simplified-dev-secret-change-in-production';
 
 /**
  * Verify JWT token
@@ -22,7 +30,7 @@ const authenticateToken = (req, res, next) => {
         });
     }
 
-    jwt.verify(token, JWT_SECRET, (err, user) => {
+    jwt.verify(token, jwtSecret, (err, user) => {
         if (err) {
             return res.status(403).json({
                 success: false,
@@ -72,7 +80,7 @@ const generateToken = (user) => {
             firstName: user.first_name,
             lastName: user.last_name
         },
-        JWT_SECRET,
+        jwtSecret,
         { expiresIn: '24h' }
     );
 };
@@ -82,5 +90,5 @@ module.exports = {
     isAdmin,
     isAgentOrAdmin,
     generateToken,
-    JWT_SECRET
+    jwtSecret
 };

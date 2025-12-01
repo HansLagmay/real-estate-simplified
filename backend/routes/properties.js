@@ -560,6 +560,21 @@ router.put('/:id/mark-sold', authenticateToken, isAgentOrAdmin, [
         const { id } = req.params;
         const { salePrice, soldDate } = req.body;
 
+        // Format the sold date properly
+        const formatDate = (dateStr) => {
+            if (!dateStr) {
+                return new Date().toISOString().slice(0, 10);
+            }
+            // Validate it's a proper date string
+            const date = new Date(dateStr);
+            if (isNaN(date.getTime())) {
+                return new Date().toISOString().slice(0, 10);
+            }
+            return date.toISOString().slice(0, 10);
+        };
+
+        const formattedSoldDate = formatDate(soldDate);
+
         // Verify property exists and is available
         const [existing] = await pool.query(
             'SELECT status FROM properties WHERE id = ?',
@@ -587,7 +602,7 @@ router.put('/:id/mark-sold', authenticateToken, isAgentOrAdmin, [
              sold_date = ?,
              sale_price = ?
              WHERE id = ?`,
-            [req.user.id, soldDate || new Date().toISOString().split('T')[0], salePrice, id]
+            [req.user.id, formattedSoldDate, salePrice, id]
         );
 
         res.json({

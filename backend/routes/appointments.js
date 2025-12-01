@@ -144,8 +144,8 @@ router.post('/', [
             });
         }
 
-        // Get client IP
-        const ipAddress = req.ip || req.connection.remoteAddress;
+        // Get client IP (using socket.remoteAddress for Node.js compatibility)
+        const ipAddress = req.ip || req.socket?.remoteAddress || 'unknown';
 
         // Insert appointment (priority_number is auto-assigned by trigger)
         const [result] = await pool.query(

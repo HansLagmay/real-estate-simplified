@@ -169,7 +169,7 @@ body {
 /* Empty State */
 .empty-state {
     padding: 3rem;
-    text-center: true;
+    text-align: center;
 }
 
 .empty-state i {
