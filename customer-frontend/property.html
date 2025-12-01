@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Property Details - Real Estate Simplified</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="bi bi-house-heart-fill me-2"></i>Real Estate Simplified
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="properties.html">Properties</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html#contact">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <header class="page-header bg-primary text-white py-5">
+        <div class="container pt-5">
+            <h1 id="property-title" class="fw-bold">Loading...</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="index.html" class="text-white-50">Home</a></li>
+                    <li class="breadcrumb-item"><a href="properties.html" class="text-white-50">Properties</a></li>
+                    <li class="breadcrumb-item active text-white" aria-current="page">Property Details</li>
+                </ol>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Loading State -->
+    <div id="loading-state" class="py-5">
+        <div class="container text-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-3 text-muted">Loading property details...</p>
+        </div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error-state" class="py-5 d-none">
+        <div class="container text-center">
+            <i class="bi bi-exclamation-circle display-1 text-danger"></i>
+            <h3 class="mt-3">Property Not Found</h3>
+            <p class="text-muted">The property you're looking for doesn't exist or has been removed.</p>
+            <a href="properties.html" class="btn btn-primary">Browse Properties</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main id="property-content" class="py-5 d-none">
+        <div class="container">
+            <div class="row">
+                <!-- Property Details -->
+                <div class="col-lg-8 mb-4">
+                    <!-- Photo Gallery -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body p-0">
+                            <div id="photo-carousel" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-inner" id="carousel-images">
+                                    <!-- Images loaded dynamically -->
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#photo-carousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon"></span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#photo-carousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Property Info -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <span id="property-type" class="badge bg-primary mb-2">House</span>
+                                    <span id="property-status" class="badge bg-success mb-2 ms-2">Available</span>
+                                </div>
+                                <h3 id="property-price" class="text-primary mb-0">₱0</h3>
+                            </div>
+                            <h4 id="property-title-detail" class="mb-3">Property Title</h4>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-geo-alt me-2"></i>
+                                <span id="property-location">Address, City</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Property Specs -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">Property Details</h5>
+                            <div class="row g-3" id="property-specs">
+                                <!-- Specs loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Description</h5>
+                            <p id="property-description" class="mb-0 text-muted">
+                                Loading description...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Features -->
+                    <div class="card border-0 shadow-sm" id="features-card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-3">Features & Amenities</h5>
+                            <div id="property-features" class="d-flex flex-wrap gap-2">
+                                <!-- Features loaded dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="col-lg-4">
+                    <!-- Request Viewing Form -->
+                    <div class="card border-0 shadow-sm sticky-top" style="top: 100px;">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">
+                                <i class="bi bi-calendar-check me-2"></i>Request a Viewing
+                            </h5>
+                            <form id="viewing-form">
+                                <div class="mb-3">
+                                    <label for="customer-name" class="form-label">Full Name *</label>
+                                    <input type="text" class="form-control" id="customer-name" required 
+                                           placeholder="Juan Dela Cruz">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="customer-email" class="form-label">Email Address *</label>
+                                    <input type="email" class="form-control" id="customer-email" required 
+                                           placeholder="juan@email.com">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="customer-phone" class="form-label">Phone Number *</label>
+                                    <input type="tel" class="form-control" id="customer-phone" required 
+                                           placeholder="+63-917-123-4567">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="customer-message" class="form-label">Message (Optional)</label>
+                                    <textarea class="form-control" id="customer-message" rows="3" 
+                                              placeholder="I'm interested in viewing this property..."></textarea>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary btn-lg" id="submit-btn">
+                                        <i class="bi bi-send me-2"></i>Request Viewing
+                                    </button>
+                                </div>
+                                <small class="text-muted d-block mt-3 text-center">
+                                    We'll contact you within 24 hours to schedule your viewing.
+                                </small>
+                            </form>
+
+                            <!-- Success Message -->
+                            <div id="success-message" class="d-none text-center py-4">
+                                <i class="bi bi-check-circle display-1 text-success"></i>
+                                <h5 class="mt-3">Request Submitted!</h5>
+                                <p class="text-muted">
+                                    Thank you for your interest. One of our agents will contact you within 24 hours.
+                                </p>
+                                <button class="btn btn-outline-primary" onclick="location.reload()">
+                                    Submit Another Request
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agent Info (if available) -->
+                    <div class="card border-0 shadow-sm mt-4" id="agent-card">
+                        <div class="card-body">
+                            <h6 class="card-title mb-3">Listed By</h6>
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" 
+                                     style="width: 50px; height: 50px;">
+                                    <i class="bi bi-person"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <strong id="agent-name">Agent Name</strong>
+                                    <div class="text-muted small">Real Estate Agent</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 bg-dark text-white">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <i class="bi bi-house-heart-fill me-2"></i>Real Estate Simplified
+                    <small class="text-muted ms-2">&copy; 2025 All rights reserved</small>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="text-white me-3"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="text-white me-3"><i class="bi bi-instagram"></i></a>
+                    <a href="#" class="text-white me-3"><i class="bi bi-twitter"></i></a>
+                    <a href="#" class="text-white"><i class="bi bi-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/property.js"></script>
+</body>
+</html>

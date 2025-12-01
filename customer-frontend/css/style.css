@@ -1,0 +1,271 @@
+/* Real Estate Simplified - Customer Frontend Styles */
+
+:root {
+    --primary-color: #0d6efd;
+    --primary-dark: #0a58ca;
+}
+
+/* General */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    padding-top: 56px;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.9), rgba(13, 110, 253, 0.7)),
+                url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920') center/cover;
+    min-height: 100vh;
+    margin-top: -56px;
+    padding-top: 56px;
+}
+
+/* Page Header */
+.page-header {
+    padding-top: 80px !important;
+}
+
+/* Feature Icons */
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 2rem;
+}
+
+/* Property Type Cards */
+.property-type-card {
+    transition: all 0.3s ease;
+}
+
+.property-type-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Property Cards */
+.property-card {
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.property-card .card-img-top {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.property-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.property-card .card-img-wrapper {
+    overflow: hidden;
+    position: relative;
+}
+
+.property-card .badge-featured {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+}
+
+.property-card .property-price {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.property-card .property-specs {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.property-card .property-specs i {
+    margin-right: 0.25rem;
+}
+
+/* Property Details Page */
+#photo-carousel .carousel-item img {
+    height: 400px;
+    object-fit: cover;
+    width: 100%;
+    border-radius: 0.375rem;
+}
+
+@media (max-width: 768px) {
+    #photo-carousel .carousel-item img {
+        height: 250px;
+    }
+}
+
+.spec-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 0.5rem;
+}
+
+.spec-item i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-right: 0.75rem;
+}
+
+.spec-item .spec-label {
+    font-size: 0.75rem;
+    color: #6c757d;
+    text-transform: uppercase;
+}
+
+.spec-item .spec-value {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Filter Sidebar */
+@media (max-width: 991px) {
+    .sticky-top {
+        position: relative !important;
+        top: 0 !important;
+    }
+}
+
+/* Breadcrumb */
+.breadcrumb-item + .breadcrumb-item::before {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Pagination */
+.pagination .page-link {
+    color: var(--primary-color);
+    border: none;
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+    border-radius: 0.375rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+}
+
+/* Empty State */
+.empty-state {
+    padding: 3rem;
+    text-center: true;
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: #dee2e6;
+    margin-bottom: 1rem;
+}
+
+/* Loading Skeleton */
+.skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 1050;
+}
+
+/* Feature Badges */
+.feature-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: #e7f1ff;
+    color: var(--primary-color);
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+}
+
+.feature-badge i {
+    margin-right: 0.5rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 576px) {
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+    
+    .property-card .card-img-top {
+        height: 180px;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+}
+
+/* Dark Footer Links */
+footer a {
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+footer a:hover {
+    opacity: 1;
+}
+
+/* Form Validation States */
+.form-control.is-invalid {
+    border-color: #dc3545;
+}
+
+.form-control.is-valid {
+    border-color: #198754;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
