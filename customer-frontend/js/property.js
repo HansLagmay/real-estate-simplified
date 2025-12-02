@@ -225,9 +225,10 @@ function setupViewingForm() {
         const name = document.getElementById('customer-name').value.trim();
         const email = document.getElementById('customer-email').value.trim();
         const phone = document.getElementById('customer-phone').value.trim();
+        const intent = document.getElementById('customer-intent').value;
         const message = document.getElementById('customer-message').value.trim();
         
-        if (!name || !email || !phone) {
+        if (!name || !email || !phone || !intent) {
             Utils.showToast('Please fill in all required fields.', 'error');
             return;
         }
@@ -237,12 +238,24 @@ function setupViewingForm() {
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Submitting...';
         
         try {
+            // Get reCAPTCHA token if available
+            let recaptchaToken = null;
+            if (typeof grecaptcha !== 'undefined' && window.RECAPTCHA_SITE_KEY) {
+                try {
+                    recaptchaToken = await grecaptcha.execute(window.RECAPTCHA_SITE_KEY, { action: 'submit_inquiry' });
+                } catch (recaptchaError) {
+                    console.warn('reCAPTCHA not available:', recaptchaError);
+                }
+            }
+
             const response = await API.submitViewingRequest({
                 propertyId: parseInt(propertyId),
                 customerName: name,
                 customerEmail: email,
                 customerPhone: phone,
-                customerMessage: message
+                customerIntent: intent,
+                customerMessage: message,
+                recaptchaToken: recaptchaToken
             });
             
             // Show success

@@ -545,7 +545,8 @@ router.delete('/:id/photos/:photoId', authenticateToken, isAgentOrAdmin, async (
  */
 router.put('/:id/mark-sold', authenticateToken, isAgentOrAdmin, [
     body('salePrice').isFloat({ min: 0 }),
-    body('soldDate').optional().isISO8601()
+    body('soldDate').optional().isISO8601(),
+    body('buyerName').optional().trim().isLength({ max: 200 })
 ], async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -558,7 +559,7 @@ router.put('/:id/mark-sold', authenticateToken, isAgentOrAdmin, [
         }
 
         const { id } = req.params;
-        const { salePrice, soldDate } = req.body;
+        const { salePrice, soldDate, buyerName } = req.body;
 
         // Format the sold date properly
         const formatDate = (dateStr) => {
@@ -600,9 +601,10 @@ router.put('/:id/mark-sold', authenticateToken, isAgentOrAdmin, [
              status = 'sold',
              sold_by_agent_id = ?,
              sold_date = ?,
-             sale_price = ?
+             sale_price = ?,
+             buyer_name = ?
              WHERE id = ?`,
-            [req.user.id, formattedSoldDate, salePrice, id]
+            [req.user.id, formattedSoldDate, salePrice, buyerName || null, id]
         );
 
         res.json({
@@ -645,7 +647,7 @@ router.get('/sold/all', authenticateToken, isAdmin, async (req, res) => {
         }
 
         const [sales] = await pool.query(
-            `SELECT p.id, p.title, p.city, p.sale_price, p.sold_date,
+            `SELECT p.id, p.title, p.city, p.sale_price, p.sold_date, p.buyer_name,
                     u.id as agent_id, CONCAT(u.first_name, ' ', u.last_name) as agent_name,
                     u.commission_rate,
                     (p.sale_price * u.commission_rate) as commission
@@ -669,6 +671,7 @@ router.get('/sold/all', authenticateToken, isAdmin, async (req, res) => {
                 city: s.city,
                 salePrice: parseFloat(s.sale_price),
                 soldDate: s.sold_date,
+                buyerName: s.buyer_name,
                 agentId: s.agent_id,
                 agentName: s.agent_name,
                 commissionRate: parseFloat(s.commission_rate),
@@ -718,7 +721,7 @@ router.get('/my-sales', authenticateToken, isAgentOrAdmin, async (req, res) => {
         const commissionRate = agent.length > 0 ? parseFloat(agent[0].commission_rate) : 0.03;
 
         const [sales] = await pool.query(
-            `SELECT p.id, p.title, p.city, p.sale_price, p.sold_date, p.price as original_price
+            `SELECT p.id, p.title, p.city, p.sale_price, p.sold_date, p.price as original_price, p.buyer_name
              FROM properties p
              ${whereClause}
              ORDER BY p.sold_date DESC`,
@@ -740,6 +743,7 @@ router.get('/my-sales', authenticateToken, isAgentOrAdmin, async (req, res) => {
                 originalPrice: parseFloat(s.original_price),
                 salePrice: parseFloat(s.sale_price),
                 soldDate: s.sold_date,
+                buyerName: s.buyer_name,
                 commission: parseFloat(s.sale_price) * commissionRate
             })),
             summary: {
@@ -785,7 +789,7 @@ router.get('/sold/export', authenticateToken, isAdmin, async (req, res) => {
 
         const [sales] = await pool.query(
             `SELECT p.id, p.title, p.address, p.city, p.property_type,
-                    p.price as listing_price, p.sale_price, p.sold_date,
+                    p.price as listing_price, p.sale_price, p.sold_date, p.buyer_name,
                     u.id as agent_id, CONCAT(u.first_name, ' ', u.last_name) as agent_name,
                     u.email as agent_email, u.commission_rate,
                     (p.sale_price * u.commission_rate) as commission
@@ -797,7 +801,7 @@ router.get('/sold/export', authenticateToken, isAdmin, async (req, res) => {
         );
 
         // Generate CSV
-        const headers = ['Property ID', 'Title', 'Address', 'City', 'Type', 'Listing Price', 'Sale Price', 'Sale Date', 'Agent ID', 'Agent Name', 'Agent Email', 'Commission Rate', 'Commission'];
+        const headers = ['Property ID', 'Title', 'Address', 'City', 'Type', 'Listing Price', 'Sale Price', 'Sale Date', 'Buyer Name', 'Agent ID', 'Agent Name', 'Agent Email', 'Commission Rate', 'Commission'];
         const rows = sales.map(s => [
             s.id,
             `"${s.title}"`,
@@ -807,6 +811,7 @@ router.get('/sold/export', authenticateToken, isAdmin, async (req, res) => {
             s.listing_price,
             s.sale_price,
             s.sold_date,
+            `"${s.buyer_name || ''}"`,
             s.agent_id,
             `"${s.agent_name}"`,
             s.agent_email,

@@ -46,6 +46,7 @@ CREATE TABLE properties (
     sold_by_agent_id INT,
     sold_date DATE,
     sale_price DECIMAL(15, 2),
+    buyer_name VARCHAR(200),
     is_featured BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -80,6 +81,7 @@ CREATE TABLE appointments (
     customer_name VARCHAR(200) NOT NULL,
     customer_email VARCHAR(255) NOT NULL,
     customer_phone VARCHAR(20) NOT NULL,
+    customer_intent ENUM('buy', 'rent', 'invest', 'inquire') NOT NULL DEFAULT 'inquire',
     customer_message TEXT,
     
     -- Priority queue (auto-assigned)
@@ -110,7 +112,12 @@ CREATE TABLE appointments (
     INDEX idx_status (status),
     INDEX idx_assigned_agent (assigned_agent_id),
     INDEX idx_property_id (property_id),
-    INDEX idx_priority (priority_number)
+    INDEX idx_priority (priority_number),
+    INDEX idx_scheduled (scheduled_date, scheduled_time),
+    -- UNIQUE constraint to prevent double-booking
+    -- Note: MySQL allows multiple NULL values in unique constraints, so pending 
+    -- appointments (with NULL scheduled_date/time) won't conflict with each other
+    UNIQUE KEY unique_property_schedule (property_id, scheduled_date, scheduled_time)
 );
 
 -- Trigger to auto-assign priority number
@@ -124,6 +131,24 @@ BEGIN
     FROM appointments 
     WHERE property_id = NEW.property_id;
     SET NEW.priority_number = max_priority;
+END//
+DELIMITER ;
+
+-- Trigger to recalculate priorities when appointment is cancelled
+DELIMITER //
+CREATE TRIGGER after_appointment_cancel
+AFTER UPDATE ON appointments
+FOR EACH ROW
+BEGIN
+    -- When an appointment is cancelled, recalculate priorities for remaining appointments
+    IF OLD.status != 'cancelled' AND NEW.status = 'cancelled' THEN
+        -- Update priority numbers for appointments with higher priority
+        UPDATE appointments 
+        SET priority_number = priority_number - 1 
+        WHERE property_id = NEW.property_id 
+        AND priority_number > NEW.priority_number
+        AND status != 'cancelled';
+    END IF;
 END//
 DELIMITER ;
 

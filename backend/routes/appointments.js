@@ -74,6 +74,7 @@ router.post('/', [
     body('customerName').trim().notEmpty().isLength({ max: 200 }),
     body('customerEmail').isEmail().normalizeEmail(),
     body('customerPhone').trim().notEmpty().isLength({ max: 20 }),
+    body('customerIntent').isIn(['buy', 'rent', 'invest', 'inquire']),
     body('customerMessage').optional().trim().isLength({ max: 1000 })
 ], async (req, res) => {
     try {
@@ -86,7 +87,7 @@ router.post('/', [
             });
         }
 
-        const { propertyId, customerName, customerEmail, customerPhone, customerMessage, recaptchaToken } = req.body;
+        const { propertyId, customerName, customerEmail, customerPhone, customerIntent, customerMessage, recaptchaToken } = req.body;
 
         // Verify reCAPTCHA
         let recaptchaScore = null;
@@ -150,10 +151,10 @@ router.post('/', [
         // Insert appointment (priority_number is auto-assigned by trigger)
         const [result] = await pool.query(
             `INSERT INTO appointments 
-             (property_id, customer_name, customer_email, customer_phone, customer_message, 
+             (property_id, customer_name, customer_email, customer_phone, customer_intent, customer_message, 
               recaptcha_score, ip_address)
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [propertyId, customerName, customerEmail, customerPhone, customerMessage || null, 
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [propertyId, customerName, customerEmail, customerPhone, customerIntent || 'inquire', customerMessage || null, 
              recaptchaScore, ipAddress]
         );
 
@@ -243,6 +244,7 @@ router.get('/', authenticateToken, isAdmin, async (req, res) => {
                 customerName: a.customer_name,
                 customerEmail: a.customer_email,
                 customerPhone: a.customer_phone,
+                customerIntent: a.customer_intent,
                 customerMessage: a.customer_message,
                 priorityNumber: a.priority_number,
                 status: a.status,
@@ -327,6 +329,7 @@ router.get('/my', authenticateToken, isAgentOrAdmin, async (req, res) => {
                 customerName: a.customer_name,
                 customerEmail: a.customer_email,
                 customerPhone: a.customer_phone,
+                customerIntent: a.customer_intent,
                 customerMessage: a.customer_message,
                 priorityNumber: a.priority_number,
                 status: a.status,
@@ -488,6 +491,24 @@ router.put('/:id/schedule', authenticateToken, isAgentOrAdmin, [
 
         const appointment = appointments[0];
 
+        // Check for double-booking conflicts (same property, date, and time)
+        const [conflicts] = await pool.query(
+            `SELECT id FROM appointments 
+             WHERE property_id = ? 
+             AND scheduled_date = ? 
+             AND scheduled_time = ?
+             AND id != ?
+             AND status != 'cancelled'`,
+            [appointment.property_id, scheduledDate, scheduledTime, id]
+        );
+
+        if (conflicts.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: 'This time slot is already booked for this property. Please choose a different time.'
+            });
+        }
+
         // Update appointment
         await pool.query(
             `UPDATE appointments SET 
@@ -523,6 +544,13 @@ router.put('/:id/schedule', authenticateToken, isAgentOrAdmin, [
         });
     } catch (error) {
         console.error('Schedule error:', error);
+        // Handle unique constraint violation
+        if (error.code === 'ER_DUP_ENTRY') {
+            return res.status(409).json({
+                success: false,
+                message: 'This time slot is already booked for this property. Please choose a different time.'
+            });
+        }
         res.status(500).json({
             success: false,
             message: 'Failed to schedule viewing'
@@ -680,6 +708,66 @@ router.get('/stats', authenticateToken, isAdmin, async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to fetch statistics'
+        });
+    }
+});
+
+/**
+ * GET /api/appointments/calendar
+ * Admin/Agent - Get all scheduled appointments for shared calendar view
+ * Shows ALL appointments from ALL agents to prevent double-booking
+ */
+router.get('/calendar', authenticateToken, isAgentOrAdmin, async (req, res) => {
+    try {
+        const { startDate, endDate, month, year } = req.query;
+
+        let whereClause = "WHERE a.scheduled_date IS NOT NULL AND a.status IN ('scheduled', 'completed')";
+        const params = [];
+
+        // Filter by date range
+        if (startDate && endDate) {
+            whereClause += ' AND a.scheduled_date BETWEEN ? AND ?';
+            params.push(startDate, endDate);
+        } else if (month && year) {
+            // Filter by month/year
+            whereClause += ' AND MONTH(a.scheduled_date) = ? AND YEAR(a.scheduled_date) = ?';
+            params.push(parseInt(month), parseInt(year));
+        }
+
+        const [appointments] = await pool.query(
+            `SELECT a.id, a.property_id, a.scheduled_date, a.scheduled_time, a.status,
+                    a.customer_name, a.assigned_agent_id,
+                    p.title as property_title, p.address as property_address, p.city as property_city,
+                    CONCAT(u.first_name, ' ', u.last_name) as agent_name
+             FROM appointments a
+             JOIN properties p ON p.id = a.property_id
+             LEFT JOIN users u ON u.id = a.assigned_agent_id
+             ${whereClause}
+             ORDER BY a.scheduled_date ASC, a.scheduled_time ASC`,
+            params
+        );
+
+        res.json({
+            success: true,
+            appointments: appointments.map(a => ({
+                id: a.id,
+                propertyId: a.property_id,
+                propertyTitle: a.property_title,
+                propertyAddress: a.property_address,
+                propertyCity: a.property_city,
+                customerName: a.customer_name,
+                scheduledDate: a.scheduled_date,
+                scheduledTime: a.scheduled_time,
+                status: a.status,
+                assignedAgentId: a.assigned_agent_id,
+                agentName: a.agent_name
+            }))
+        });
+    } catch (error) {
+        console.error('Get calendar error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch calendar'
         });
     }
 });
