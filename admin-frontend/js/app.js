@@ -265,9 +265,23 @@ async function openAssignModal(appointmentId) {
         const response = await API.getAgents();
         agentsList = response.agents || [];
         
-        select.innerHTML = agentsList.map(agent => `
-            <option value="${agent.id}">${agent.fullName} (${agent.email})</option>
-        `).join('');
+        select.innerHTML = agentsList.map(agent => {
+            const workloadBadge = agent.activeAppointments > 0 
+                ? `(${agent.activeAppointments} active` + (agent.todayAppointments > 0 ? `, ${agent.todayAppointments} today` : '') + ')' 
+                : '(No active tasks)';
+            return `<option value="${agent.id}">${agent.fullName} ${workloadBadge}</option>`;
+        }).join('');
+        
+        // Add workload info text
+        const infoDiv = document.getElementById('agent-workload-info');
+        if (!infoDiv) {
+            const modalBody = select.closest('.modal-body');
+            const info = document.createElement('small');
+            info.id = 'agent-workload-info';
+            info.className = 'text-muted d-block mt-2';
+            info.textContent = 'Agents with fewer active tasks are recommended for faster response.';
+            modalBody.appendChild(info);
+        }
     } catch (error) {
         select.innerHTML = '<option value="">Failed to load agents</option>';
     }

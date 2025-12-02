@@ -321,14 +321,13 @@ real-estate-simplified/
 After running seed.sql:
 
 **Admin:**
-- Email: `admin@realestate.com`
+- Email: `admin@company.com`
 - Password: `admin123`
 
 **Agents:**
-- Email: `maria.santos@realestate.com`
-- Password: `agent123`
-- Email: `juan.dela_cruz@realestate.com`
-- Password: `agent123`
+- Email: `agent1@company.com` / Password: `agent123`
+- Email: `agent2@company.com` / Password: `agent123`
+- Email: `agent3@company.com` / Password: `agent123`
 
 ⚠️ **Change these passwords in production!**
 

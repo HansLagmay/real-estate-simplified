@@ -64,14 +64,21 @@ router.get('/', authenticateToken, isAdmin, async (req, res) => {
 /**
  * GET /api/users/agents
  * Admin - Get all agents (for assignment dropdown)
+ * Includes workload count for each agent
  */
 router.get('/agents', authenticateToken, isAdmin, async (req, res) => {
     try {
         const [agents] = await pool.query(
-            `SELECT id, email, first_name, last_name, phone, commission_rate
-             FROM users 
-             WHERE role = 'agent' AND is_active = TRUE
-             ORDER BY first_name`
+            `SELECT u.id, u.email, u.first_name, u.last_name, u.phone, u.commission_rate,
+                    (SELECT COUNT(*) FROM appointments a 
+                     WHERE a.assigned_agent_id = u.id 
+                     AND a.status IN ('assigned', 'scheduled')) as active_appointments,
+                    (SELECT COUNT(*) FROM appointments a 
+                     WHERE a.assigned_agent_id = u.id 
+                     AND a.scheduled_date = CURDATE()) as today_appointments
+             FROM users u
+             WHERE u.role = 'agent' AND u.is_active = TRUE
+             ORDER BY u.first_name`
         );
 
         res.json({
@@ -83,7 +90,9 @@ router.get('/agents', authenticateToken, isAdmin, async (req, res) => {
                 lastName: a.last_name,
                 fullName: `${a.first_name} ${a.last_name}`,
                 phone: a.phone,
-                commissionRate: parseFloat(a.commission_rate)
+                commissionRate: parseFloat(a.commission_rate),
+                activeAppointments: parseInt(a.active_appointments) || 0,
+                todayAppointments: parseInt(a.today_appointments) || 0
             }))
         });
     } catch (error) {

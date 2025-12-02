@@ -563,7 +563,8 @@ router.put('/:id/schedule', authenticateToken, isAgentOrAdmin, [
  * Agent - Mark viewing as completed
  */
 router.put('/:id/complete', authenticateToken, isAgentOrAdmin, [
-    body('outcome').isIn(['interested', 'offer_made', 'not_interested', 'no_show']),
+    body('outcome').isIn(['interested', 'offer_made', 'not_interested', 'no_show', 'needs_followup']),
+    body('outcomeNotes').optional().trim(),
     body('agentNotes').optional().trim()
 ], async (req, res) => {
     try {
@@ -577,7 +578,7 @@ router.put('/:id/complete', authenticateToken, isAgentOrAdmin, [
         }
 
         const { id } = req.params;
-        const { outcome, agentNotes } = req.body;
+        const { outcome, outcomeNotes, agentNotes } = req.body;
 
         // Verify appointment exists and is assigned to this agent
         const [appointments] = await pool.query(
@@ -597,9 +598,11 @@ router.put('/:id/complete', authenticateToken, isAgentOrAdmin, [
             `UPDATE appointments SET 
              status = 'completed',
              outcome = ?,
-             agent_notes = COALESCE(?, agent_notes)
+             outcome_notes = ?,
+             agent_notes = COALESCE(?, agent_notes),
+             completed_at = NOW()
              WHERE id = ?`,
-            [outcome, agentNotes, id]
+            [outcome, outcomeNotes || null, agentNotes, id]
         );
 
         res.json({
