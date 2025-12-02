@@ -97,7 +97,7 @@ CREATE TABLE appointments (
     
     -- Status tracking
     status ENUM('pending', 'assigned', 'scheduled', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
-    outcome ENUM('interested', 'offer_made', 'not_interested', 'no_show') NULL,
+    outcome ENUM('interested', 'offer_made', 'not_interested', 'no_show', 'needs_followup') NULL,
     outcome_notes TEXT,
     agent_notes TEXT,
     admin_notes TEXT,
