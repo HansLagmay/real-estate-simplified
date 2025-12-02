@@ -2,14 +2,16 @@
 -- Run after schema.sql
 
 -- Insert admin user (password: admin123)
+-- Note: Password hash is for 'admin123' - generated with bcrypt
 INSERT INTO users (email, password_hash, first_name, last_name, phone, role) VALUES
-('admin@realestate.com', '$2a$10$rZ5xGV5VQgTPV3YO0VaKr.F6xHJYDl5LrXmSFN0jBKnGXTmwLYZHa', 'System', 'Admin', '+63-917-123-4567', 'admin');
+('admin@company.com', '$2a$10$rZ5xGV5VQgTPV3YO0VaKr.F6xHJYDl5LrXmSFN0jBKnGXTmwLYZHa', 'System', 'Admin', '+63-917-123-4567', 'admin');
 
 -- Insert agent users (password: agent123)
+-- Note: Password hash is for 'agent123' - generated with bcrypt
 INSERT INTO users (email, password_hash, first_name, last_name, phone, role, commission_rate) VALUES
-('maria.santos@realestate.com', '$2a$10$rQMHPBWOBbLxWRYdGvzDu.YjV7xNMBWVGtGS.PJ2TUH7lPFGQ0X0K', 'Maria', 'Santos', '+63-917-234-5678', 'agent', 0.0300),
-('juan.dela_cruz@realestate.com', '$2a$10$rQMHPBWOBbLxWRYdGvzDu.YjV7xNMBWVGtGS.PJ2TUH7lPFGQ0X0K', 'Juan', 'Dela Cruz', '+63-918-345-6789', 'agent', 0.0300),
-('ana.reyes@realestate.com', '$2a$10$rQMHPBWOBbLxWRYdGvzDu.YjV7xNMBWVGtGS.PJ2TUH7lPFGQ0X0K', 'Ana', 'Reyes', '+63-919-456-7890', 'agent', 0.0350);
+('agent1@company.com', '$2a$10$rQMHPBWOBbLxWRYdGvzDu.YjV7xNMBWVGtGS.PJ2TUH7lPFGQ0X0K', 'Maria', 'Santos', '+63-917-234-5678', 'agent', 0.0300),
+('agent2@company.com', '$2a$10$rQMHPBWOBbLxWRYdGvzDu.YjV7xNMBWVGtGS.PJ2TUH7lPFGQ0X0K', 'Juan', 'Dela Cruz', '+63-918-345-6789', 'agent', 0.0300),
+('agent3@company.com', '$2a$10$rQMHPBWOBbLxWRYdGvzDu.YjV7xNMBWVGtGS.PJ2TUH7lPFGQ0X0K', 'Ana', 'Reyes', '+63-919-456-7890', 'agent', 0.0350);
 
 -- Insert sample properties
 INSERT INTO properties (title, description, property_type, address, city, province, zip_code, price, bedrooms, bathrooms, floor_area, lot_area, year_built, features, status, listed_by_agent_id, is_featured) VALUES

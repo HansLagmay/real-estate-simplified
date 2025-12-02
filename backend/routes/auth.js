@@ -136,10 +136,11 @@ router.post('/register', authenticateToken, isAdmin, [
 });
 
 /**
+ * GET /api/auth/me
  * GET /api/auth/profile
  * Get current user profile
  */
-router.get('/profile', authenticateToken, async (req, res) => {
+const getProfileHandler = async (req, res) => {
     try {
         const [users] = await pool.query(
             `SELECT id, email, first_name, last_name, phone, role, commission_rate, created_at 
@@ -175,7 +176,10 @@ router.get('/profile', authenticateToken, async (req, res) => {
             message: 'Failed to fetch profile'
         });
     }
-});
+};
+
+router.get('/me', authenticateToken, getProfileHandler);
+router.get('/profile', authenticateToken, getProfileHandler);
 
 /**
  * PUT /api/auth/profile

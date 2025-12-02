@@ -352,6 +352,7 @@ function openScheduleModal(appointmentId) {
 function openCompleteModal(appointmentId) {
     document.getElementById('complete-appointment-id').value = appointmentId;
     document.getElementById('complete-outcome').value = '';
+    document.getElementById('complete-outcome-notes').value = '';
     document.getElementById('complete-notes').value = '';
     
     const modal = new bootstrap.Modal(document.getElementById('completeModal'));
@@ -359,6 +360,7 @@ function openCompleteModal(appointmentId) {
     
     document.getElementById('confirm-complete-btn').onclick = async () => {
         const outcome = document.getElementById('complete-outcome').value;
+        const outcomeNotes = document.getElementById('complete-outcome-notes').value;
         const agentNotes = document.getElementById('complete-notes').value;
         
         if (!outcome) {
@@ -369,6 +371,7 @@ function openCompleteModal(appointmentId) {
         try {
             await API.completeAppointment(appointmentId, {
                 outcome,
+                outcomeNotes,
                 agentNotes
             });
             Utils.showToast('Viewing marked as completed', 'success');
