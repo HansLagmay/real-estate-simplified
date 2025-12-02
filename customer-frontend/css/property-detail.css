@@ -1,0 +1,406 @@
+/* =====================================================
+   Real Estate Simplified - Property Detail Page Styles
+   ===================================================== */
+
+/* =====================================================
+   Image Gallery
+   ===================================================== */
+.property-gallery {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 10px 40px var(--shadow);
+  background: var(--white);
+}
+
+.property-gallery .main-image {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+}
+
+.property-gallery .carousel-item img {
+  height: 450px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.property-gallery .carousel-control-prev,
+.property-gallery .carousel-control-next {
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.property-gallery:hover .carousel-control-prev,
+.property-gallery:hover .carousel-control-next {
+  opacity: 1;
+}
+
+.property-gallery .carousel-control-prev {
+  left: 20px;
+}
+
+.property-gallery .carousel-control-next {
+  right: 20px;
+}
+
+/* Gallery Thumbnails */
+.gallery-thumbnails {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+
+.gallery-thumbnails img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.gallery-thumbnails img:hover {
+  border-color: var(--secondary);
+  transform: scale(1.05);
+}
+
+.gallery-thumbnails img.active {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.3);
+}
+
+/* =====================================================
+   Property Info Card
+   ===================================================== */
+.property-info-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: 0 5px 25px var(--shadow);
+  position: sticky;
+  top: 100px;
+}
+
+.property-info-card .property-price {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--secondary);
+}
+
+.property-info-card .property-type {
+  display: inline-block;
+  background: var(--primary);
+  color: var(--white);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.property-info-card .property-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.property-info-card .property-status.available {
+  background: rgba(39, 174, 96, 0.15);
+  color: var(--success);
+}
+
+.property-info-card .property-status.sold {
+  background: rgba(231, 76, 60, 0.15);
+  color: var(--danger);
+}
+
+/* =====================================================
+   Property Specs Grid
+   ===================================================== */
+.spec-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: var(--light);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.spec-item:hover {
+  background: rgba(230, 126, 34, 0.1);
+}
+
+.spec-item i {
+  font-size: 1.5rem;
+  color: var(--secondary);
+  margin-right: 1rem;
+  width: 40px;
+  text-align: center;
+}
+
+.spec-item .spec-label {
+  font-size: 0.75rem;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spec-item .spec-value {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+/* =====================================================
+   Property Description
+   ===================================================== */
+.property-description {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: 0 5px 20px var(--shadow);
+}
+
+.property-description h5 {
+  color: var(--text);
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--secondary);
+  display: inline-block;
+}
+
+.property-description p {
+  color: var(--text-light);
+  line-height: 1.8;
+}
+
+/* =====================================================
+   Features & Amenities
+   ===================================================== */
+.features-section {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: 0 5px 20px var(--shadow);
+}
+
+.feature-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: rgba(230, 126, 34, 0.1);
+  color: var(--secondary);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin: 0.25rem;
+  transition: all var(--transition-fast);
+}
+
+.feature-badge:hover {
+  background: var(--secondary);
+  color: var(--white);
+}
+
+.feature-badge i {
+  margin-right: 0.5rem;
+}
+
+/* =====================================================
+   Inquiry Form
+   ===================================================== */
+.inquiry-form {
+  background: linear-gradient(135deg, var(--light) 0%, #e8ecef 100%);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  border: 2px solid rgba(230, 126, 34, 0.2);
+}
+
+.inquiry-form h5 {
+  color: var(--text);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inquiry-form h5 i {
+  color: var(--secondary);
+}
+
+.inquiry-form .form-control,
+.inquiry-form .form-select {
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  padding: 0.875rem 1rem;
+  background: var(--white);
+}
+
+.inquiry-form .form-control:focus,
+.inquiry-form .form-select:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.1);
+}
+
+.inquiry-form .form-label {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 0.9rem;
+}
+
+.btn-inquiry {
+  background: linear-gradient(135deg, var(--secondary), #d35400);
+  color: var(--white);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 1rem 2rem;
+  font-weight: 600;
+  width: 100%;
+  transition: all var(--transition-normal);
+  font-size: 1.1rem;
+}
+
+.btn-inquiry:hover {
+  background: linear-gradient(135deg, #d35400, var(--secondary));
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(230, 126, 34, 0.3);
+}
+
+.btn-inquiry i {
+  margin-right: 0.5rem;
+}
+
+/* =====================================================
+   Agent Info Card
+   ===================================================== */
+.agent-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 5px 20px var(--shadow);
+  text-align: center;
+}
+
+.agent-card .agent-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--secondary), #d35400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  font-size: 2rem;
+  color: var(--white);
+}
+
+.agent-card .agent-name {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.agent-card .agent-title {
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* =====================================================
+   Success Message
+   ===================================================== */
+#success-message {
+  text-align: center;
+  padding: 2rem;
+}
+
+#success-message i {
+  font-size: 4rem;
+  color: var(--success);
+  margin-bottom: 1rem;
+}
+
+#success-message h5 {
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+#success-message p {
+  color: var(--text-light);
+}
+
+/* =====================================================
+   Responsive Design
+   ===================================================== */
+@media (max-width: 992px) {
+  .property-info-card {
+    position: relative;
+    top: 0;
+    margin-top: 2rem;
+  }
+  
+  .property-gallery .carousel-item img {
+    height: 350px;
+  }
+}
+
+@media (max-width: 768px) {
+  .property-gallery .main-image,
+  .property-gallery .carousel-item img {
+    height: 300px;
+  }
+  
+  .property-info-card {
+    padding: 1.5rem;
+  }
+  
+  .property-info-card .property-price {
+    font-size: 1.75rem;
+  }
+  
+  .inquiry-form {
+    padding: 1.5rem;
+  }
+  
+  .gallery-thumbnails img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .spec-item {
+    padding: 0.75rem;
+  }
+  
+  .spec-item i {
+    font-size: 1.25rem;
+    margin-right: 0.75rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .property-gallery .carousel-item img {
+    height: 250px;
+  }
+  
+  .property-info-card .property-price {
+    font-size: 1.5rem;
+  }
+  
+  .btn-inquiry {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+}

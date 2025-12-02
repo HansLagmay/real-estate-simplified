@@ -1,0 +1,577 @@
+/* =====================================================
+   Real Estate Simplified - Admin Portal Styles
+   ===================================================== */
+
+/* =====================================================
+   Sidebar Navigation
+   ===================================================== */
+.admin-sidebar,
+#sidebar {
+  background: linear-gradient(180deg, var(--primary) 0%, var(--dark) 100%);
+  color: white;
+  min-height: 100vh;
+  position: fixed;
+  width: 260px;
+  padding: 0;
+  box-shadow: 4px 0 20px var(--shadow);
+  z-index: 1000;
+  transition: transform var(--transition-normal);
+}
+
+.admin-sidebar .brand,
+#sidebar .sidebar-header {
+  padding: 1.75rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+#sidebar .sidebar-header h5 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.2rem;
+}
+
+#sidebar .sidebar-header i {
+  color: var(--secondary);
+}
+
+.admin-sidebar .nav-link,
+#sidebar .nav-link {
+  color: rgba(255, 255, 255, 0.7);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all var(--transition-fast);
+  border-left: 3px solid transparent;
+  font-weight: 500;
+}
+
+.admin-sidebar .nav-link:hover,
+.admin-sidebar .nav-link.active,
+#sidebar .nav-link:hover,
+#sidebar .nav-link.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-left-color: var(--secondary);
+}
+
+.admin-sidebar .nav-link i,
+#sidebar .nav-link i {
+  width: 24px;
+  font-size: 1.1rem;
+}
+
+/* =====================================================
+   Main Content Area
+   ===================================================== */
+.admin-main,
+#main-content {
+  margin-left: 260px;
+  padding: 0;
+  background: linear-gradient(180deg, #f5f7fa 0%, #e8ecef 100%);
+  min-height: 100vh;
+  transition: margin-left var(--transition-normal);
+}
+
+#main-content .content {
+  padding: 2rem;
+}
+
+/* Top Navbar */
+#main-content .navbar {
+  background: var(--white) !important;
+  box-shadow: 0 2px 15px var(--shadow);
+  padding: 1rem 1.5rem;
+}
+
+#main-content .navbar #sidebar-toggle {
+  color: var(--text);
+  font-size: 1.25rem;
+}
+
+/* =====================================================
+   Dashboard Stats Cards
+   ===================================================== */
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 5px 20px var(--shadow);
+  border-left: 4px solid var(--primary);
+  transition: all var(--transition-normal);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(135deg, transparent, rgba(0,0,0,0.03));
+  border-radius: 0 0 0 100%;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px var(--shadow-lg);
+}
+
+.stat-card .stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.stat-card.primary {
+  border-left-color: var(--primary);
+}
+
+.stat-card.primary .stat-icon {
+  background: rgba(44, 62, 80, 0.1);
+  color: var(--primary);
+}
+
+.stat-card.success {
+  border-left-color: var(--success);
+}
+
+.stat-card.success .stat-icon {
+  background: rgba(39, 174, 96, 0.1);
+  color: var(--success);
+}
+
+.stat-card.warning {
+  border-left-color: var(--warning);
+}
+
+.stat-card.warning .stat-icon {
+  background: rgba(243, 156, 18, 0.1);
+  color: var(--warning);
+}
+
+.stat-card.info {
+  border-left-color: var(--info);
+}
+
+.stat-card.info .stat-icon {
+  background: rgba(52, 152, 219, 0.1);
+  color: var(--info);
+}
+
+.stat-value {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.stat-label {
+  color: var(--text-light);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+/* Bootstrap colored stat cards */
+.card.bg-primary,
+.card.bg-success,
+.card.bg-info,
+.card.bg-warning {
+  border: none;
+  border-radius: var(--radius-lg) !important;
+  transition: all var(--transition-normal);
+}
+
+.card.bg-primary { background: linear-gradient(135deg, var(--primary), var(--dark)) !important; }
+.card.bg-success { background: linear-gradient(135deg, var(--success), #1e8449) !important; }
+.card.bg-info { background: linear-gradient(135deg, var(--info), #2980b9) !important; }
+.card.bg-warning { background: linear-gradient(135deg, var(--warning), #d68910) !important; }
+
+.card.bg-primary:hover,
+.card.bg-success:hover,
+.card.bg-info:hover,
+.card.bg-warning:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px var(--shadow-lg);
+}
+
+/* =====================================================
+   Data Tables
+   ===================================================== */
+.data-table {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 0;
+  box-shadow: 0 5px 20px var(--shadow);
+  overflow: hidden;
+}
+
+.data-table .card-header {
+  background: var(--white);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1.25rem 1.5rem;
+}
+
+.data-table table {
+  margin-bottom: 0;
+}
+
+.data-table th {
+  background: var(--light);
+  color: var(--text);
+  font-weight: 600;
+  border: none;
+  padding: 1rem 1.25rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.data-table td {
+  padding: 1rem 1.25rem;
+  vertical-align: middle;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.data-table tbody tr:hover {
+  background: rgba(230, 126, 34, 0.05);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =====================================================
+   Status Badges
+   ===================================================== */
+.badge-status {
+  padding: 6px 14px;
+  border-radius: var(--radius-xl);
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.badge-pending {
+  background: rgba(243, 156, 18, 0.15);
+  color: #d68910;
+}
+
+.badge-assigned {
+  background: rgba(52, 152, 219, 0.15);
+  color: #2980b9;
+}
+
+.badge-scheduled {
+  background: rgba(155, 89, 182, 0.15);
+  color: #8e44ad;
+}
+
+.badge-completed {
+  background: rgba(39, 174, 96, 0.15);
+  color: #1e8449;
+}
+
+.badge-cancelled {
+  background: rgba(231, 76, 60, 0.15);
+  color: #c0392b;
+}
+
+/* =====================================================
+   Buttons
+   ===================================================== */
+.btn-primary-custom {
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 20px;
+  font-weight: 600;
+  color: var(--white);
+  transition: all var(--transition-normal);
+}
+
+.btn-primary-custom:hover {
+  background: linear-gradient(135deg, var(--dark), var(--primary));
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(44, 62, 80, 0.3);
+  color: var(--white);
+}
+
+.btn-secondary-custom {
+  background: linear-gradient(135deg, var(--secondary), #d35400);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 20px;
+  font-weight: 600;
+  color: white;
+  transition: all var(--transition-normal);
+}
+
+.btn-secondary-custom:hover {
+  background: linear-gradient(135deg, #d35400, var(--secondary));
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(230, 126, 34, 0.3);
+  color: white;
+}
+
+.btn-action {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+}
+
+/* =====================================================
+   Calendar
+   ===================================================== */
+.calendar-container {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: 0 5px 20px var(--shadow);
+}
+
+.calendar-header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.calendar-grid {
+  width: 100%;
+}
+
+.calendar-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: linear-gradient(135deg, var(--primary), var(--dark));
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  overflow: hidden;
+}
+
+.calendar-header > div {
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  color: var(--white);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+.calendar-body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border: 1px solid var(--light);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  overflow: hidden;
+}
+
+.calendar-day {
+  min-height: 120px;
+  border: 1px solid var(--light);
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  background: var(--white);
+}
+
+.calendar-day:hover {
+  background: rgba(230, 126, 34, 0.05);
+  border-color: var(--secondary);
+}
+
+.calendar-day.empty {
+  background: #fafbfc;
+  cursor: default;
+}
+
+.calendar-day.today {
+  background: rgba(230, 126, 34, 0.1);
+  border-color: var(--secondary);
+}
+
+.calendar-day.today .day-number {
+  background: var(--secondary);
+  color: var(--white);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-day.has-appointments {
+  background: rgba(52, 152, 219, 0.08);
+}
+
+.calendar-day.has-appointments:hover {
+  background: rgba(52, 152, 219, 0.15);
+}
+
+.calendar-day .day-number {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.calendar-day .appointment-count {
+  margin-bottom: 0.25rem;
+}
+
+.calendar-day .preview-item {
+  background: rgba(52, 152, 219, 0.15);
+  color: var(--info);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 0.25rem;
+  font-size: 0.7rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* =====================================================
+   Agent Cards
+   ===================================================== */
+.agent-card {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  box-shadow: 0 5px 20px var(--shadow);
+  transition: all var(--transition-normal);
+  text-align: center;
+}
+
+.agent-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px var(--shadow-lg);
+}
+
+.agent-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--secondary), #d35400);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2rem;
+  margin: 0 auto 1rem;
+  box-shadow: 0 5px 20px rgba(230, 126, 34, 0.3);
+}
+
+.agent-card h6 {
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.agent-card .text-muted {
+  color: var(--text-light) !important;
+  font-size: 0.9rem;
+}
+
+/* =====================================================
+   Form Controls Enhancement
+   ===================================================== */
+.form-control,
+.form-select {
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  transition: all var(--transition-fast);
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--secondary);
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.15);
+}
+
+/* =====================================================
+   Sidebar Toggle States
+   ===================================================== */
+.sidebar-collapsed #sidebar {
+  transform: translateX(-100%);
+}
+
+.sidebar-collapsed #main-content {
+  margin-left: 0;
+}
+
+/* =====================================================
+   Responsive Design
+   ===================================================== */
+@media (max-width: 991px) {
+  #sidebar {
+    transform: translateX(-100%);
+  }
+  
+  #sidebar.show {
+    transform: translateX(0);
+  }
+  
+  #main-content {
+    margin-left: 0;
+  }
+  
+  .calendar-day {
+    min-height: 80px;
+    padding: 0.5rem;
+  }
+  
+  .calendar-day .day-number {
+    font-size: 0.85rem;
+  }
+  
+  .calendar-day .preview-item {
+    display: none;
+  }
+  
+  .calendar-header > div {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #main-content .content {
+    padding: 1rem;
+  }
+  
+  .stat-card {
+    padding: 1.25rem;
+  }
+  
+  .stat-value {
+    font-size: 1.75rem;
+  }
+  
+  .calendar-day {
+    min-height: 60px;
+  }
+}
+
+@media (max-width: 576px) {
+  .calendar-header > div {
+    padding: 0.5rem 0.25rem;
+    font-size: 0.6rem;
+  }
+  
+  .calendar-day .day-number {
+    font-size: 0.75rem;
+  }
+}
