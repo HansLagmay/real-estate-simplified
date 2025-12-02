@@ -110,6 +110,12 @@ const API = {
         return this.put(`/appointments/${id}/complete`, data);
     },
 
+    // Shared Calendar - shows ALL appointments from ALL agents
+    getCalendar(params = {}) {
+        const queryString = new URLSearchParams(params).toString();
+        return this.get(`/appointments/calendar${queryString ? '?' + queryString : ''}`);
+    },
+
     // My Sales
     getMySales(params = {}) {
         const queryString = new URLSearchParams(params).toString();

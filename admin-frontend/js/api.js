@@ -106,6 +106,11 @@ const API = {
         return this.get('/appointments/stats');
     },
 
+    getCalendar(params = {}) {
+        const queryString = new URLSearchParams(params).toString();
+        return this.get(`/appointments/calendar${queryString ? '?' + queryString : ''}`);
+    },
+
     // Properties
     getProperties(params = {}) {
         const queryString = new URLSearchParams(params).toString();

@@ -165,6 +165,15 @@
                                            placeholder="+63-917-123-4567">
                                 </div>
                                 <div class="mb-3">
+                                    <label for="customer-intent" class="form-label">Intent *</label>
+                                    <select class="form-select" id="customer-intent" required>
+                                        <option value="buy">Buy</option>
+                                        <option value="rent">Rent</option>
+                                        <option value="invest">Invest</option>
+                                        <option value="inquire" selected>Just Inquiring</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
                                     <label for="customer-message" class="form-label">Message (Optional)</label>
                                     <textarea class="form-control" id="customer-message" rows="3" 
                                               placeholder="I'm interested in viewing this property..."></textarea>

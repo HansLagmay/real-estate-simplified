@@ -108,6 +108,9 @@ function navigateTo(page) {
         case 'appointments':
             loadAppointments();
             break;
+        case 'calendar':
+            loadCalendar();
+            break;
         case 'properties':
             loadProperties();
             break;
@@ -541,4 +544,168 @@ function exportSalesCSV() {
     .catch(error => {
         Utils.showToast('Failed to export CSV', 'error');
     });
+}
+
+// ============ Shared Calendar ============
+
+let calendarDate = new Date();
+let calendarAppointments = [];
+
+async function loadCalendar() {
+    const month = calendarDate.getMonth() + 1;
+    const year = calendarDate.getFullYear();
+    
+    // Update label
+    const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                        'July', 'August', 'September', 'October', 'November', 'December'];
+    document.getElementById('current-month-label').textContent = `${monthNames[month - 1]} ${year}`;
+    
+    try {
+        const response = await API.getCalendar({ month, year });
+        calendarAppointments = response.appointments || [];
+        renderCalendar();
+    } catch (error) {
+        console.error('Load calendar error:', error);
+        Utils.showToast('Failed to load calendar', 'error');
+    }
+    
+    // Setup navigation buttons
+    document.getElementById('prev-month-btn').onclick = () => {
+        calendarDate.setMonth(calendarDate.getMonth() - 1);
+        loadCalendar();
+    };
+    
+    document.getElementById('next-month-btn').onclick = () => {
+        calendarDate.setMonth(calendarDate.getMonth() + 1);
+        loadCalendar();
+    };
+    
+    document.getElementById('today-btn').onclick = () => {
+        calendarDate = new Date();
+        loadCalendar();
+    };
+}
+
+function renderCalendar() {
+    const grid = document.getElementById('calendar-grid');
+    const month = calendarDate.getMonth();
+    const year = calendarDate.getFullYear();
+    
+    // Get first day of month and total days
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const today = new Date();
+    
+    // Group appointments by date
+    const appointmentsByDate = {};
+    calendarAppointments.forEach(apt => {
+        const dateStr = new Date(apt.scheduledDate).toISOString().split('T')[0];
+        if (!appointmentsByDate[dateStr]) {
+            appointmentsByDate[dateStr] = [];
+        }
+        appointmentsByDate[dateStr].push(apt);
+    });
+    
+    let html = `
+        <div class="calendar-header">
+            <div>Sun</div>
+            <div>Mon</div>
+            <div>Tue</div>
+            <div>Wed</div>
+            <div>Thu</div>
+            <div>Fri</div>
+            <div>Sat</div>
+        </div>
+        <div class="calendar-body">
+    `;
+    
+    // Empty cells before first day
+    for (let i = 0; i < firstDay; i++) {
+        html += '<div class="calendar-day empty"></div>';
+    }
+    
+    // Days of month
+    for (let day = 1; day <= daysInMonth; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const dayAppointments = appointmentsByDate[dateStr] || [];
+        const isToday = today.getDate() === day && today.getMonth() === month && today.getFullYear() === year;
+        
+        html += `
+            <div class="calendar-day ${isToday ? 'today' : ''} ${dayAppointments.length > 0 ? 'has-appointments' : ''}"
+                 onclick="showDayAppointments('${dateStr}')">
+                <div class="day-number">${day}</div>
+                ${dayAppointments.length > 0 ? `
+                    <div class="appointment-count">
+                        <span class="badge bg-primary">${dayAppointments.length} viewing${dayAppointments.length > 1 ? 's' : ''}</span>
+                    </div>
+                    <div class="appointment-preview">
+                        ${dayAppointments.slice(0, 2).map(apt => `
+                            <div class="preview-item">
+                                <small>${Utils.formatTime(apt.scheduledTime)} - ${apt.propertyTitle.substring(0, 15)}...</small>
+                            </div>
+                        `).join('')}
+                        ${dayAppointments.length > 2 ? `<small class="text-muted">+${dayAppointments.length - 2} more</small>` : ''}
+                    </div>
+                ` : ''}
+            </div>
+        `;
+    }
+    
+    html += '</div>';
+    grid.innerHTML = html;
+}
+
+function showDayAppointments(dateStr) {
+    const card = document.getElementById('day-appointments-card');
+    const tbody = document.getElementById('day-appointments-list');
+    const label = document.getElementById('selected-date-label');
+    
+    const date = new Date(dateStr);
+    label.textContent = date.toLocaleDateString('en-PH', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+    
+    const dayAppointments = calendarAppointments.filter(apt => {
+        const aptDate = new Date(apt.scheduledDate).toISOString().split('T')[0];
+        return aptDate === dateStr;
+    });
+    
+    if (dayAppointments.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center py-4 text-muted">No appointments scheduled for this day</td>
+            </tr>
+        `;
+    } else {
+        tbody.innerHTML = dayAppointments.map(apt => `
+            <tr>
+                <td><strong>${Utils.formatTime(apt.scheduledTime)}</strong></td>
+                <td>
+                    ${apt.propertyTitle}<br>
+                    <small class="text-muted">${apt.propertyCity}</small>
+                </td>
+                <td>${apt.customerName}</td>
+                <td>${apt.agentName || '-'}</td>
+                <td>${Utils.getStatusBadge(apt.status)}</td>
+            </tr>
+        `).join('');
+    }
+    
+    card.style.display = 'block';
+    card.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Add formatTime utility if not exists
+if (!Utils.formatTime) {
+    Utils.formatTime = function(timeString) {
+        if (!timeString) return '';
+        const [hours, minutes] = timeString.split(':');
+        const h = parseInt(hours);
+        const ampm = h >= 12 ? 'PM' : 'AM';
+        const hour = h % 12 || 12;
+        return `${hour}:${minutes} ${ampm}`;
+    };
 }
