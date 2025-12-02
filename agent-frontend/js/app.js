@@ -582,7 +582,8 @@ function renderCalendar() {
     const firstDay = new Date(year, month, 1).getDay();
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const today = new Date();
-    const currentUserId = API.getUser()?.id;
+    const currentUser = API.getUser();
+    const currentUserId = currentUser ? currentUser.id : null;
     
     // Group appointments by date
     const appointmentsByDate = {};
@@ -649,7 +650,8 @@ function showDayAppointments(dateStr) {
     const card = document.getElementById('day-appointments-card');
     const tbody = document.getElementById('day-appointments-list');
     const label = document.getElementById('selected-date-label');
-    const currentUserId = API.getUser()?.id;
+    const currentUser = API.getUser();
+    const currentUserId = currentUser ? currentUser.id : null;
     
     const date = new Date(dateStr);
     label.textContent = date.toLocaleDateString('en-PH', { 

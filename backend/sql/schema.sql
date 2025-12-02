@@ -114,7 +114,9 @@ CREATE TABLE appointments (
     INDEX idx_property_id (property_id),
     INDEX idx_priority (priority_number),
     INDEX idx_scheduled (scheduled_date, scheduled_time),
-    -- UNIQUE constraint to prevent double-booking (only for scheduled appointments)
+    -- UNIQUE constraint to prevent double-booking
+    -- Note: MySQL allows multiple NULL values in unique constraints, so pending 
+    -- appointments (with NULL scheduled_date/time) won't conflict with each other
     UNIQUE KEY unique_property_schedule (property_id, scheduled_date, scheduled_time)
 );
 
